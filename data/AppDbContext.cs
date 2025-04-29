@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using MinhaApi.Models;
 
-namespace MinhaApi.Data;
-
-public class AppDbContext : DbContext
+namespace MinhaApi.Data
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-    public DbSet<Livro> Livros => Set<Livro>();
-    public DbSet<Categoria> GetCategorias()
+    public class AppDbContext : DbContext
     {
-        return Set<Categoria>();
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Livro> Livros { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }

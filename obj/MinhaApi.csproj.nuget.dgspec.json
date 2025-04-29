@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/brunorodrigo/MinhaApi/MinhaApi.csproj": {}
+    "D:\\Trabalho-csharp\\MinhaApi.csproj": {}
   },
   "projects": {
-    "/Users/brunorodrigo/MinhaApi/MinhaApi.csproj": {
+    "D:\\Trabalho-csharp\\MinhaApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/brunorodrigo/MinhaApi/MinhaApi.csproj",
+        "projectUniqueName": "D:\\Trabalho-csharp\\MinhaApi.csproj",
         "projectName": "MinhaApi",
-        "projectPath": "/Users/brunorodrigo/MinhaApi/MinhaApi.csproj",
-        "packagesPath": "/Users/brunorodrigo/.nuget/packages/",
-        "outputPath": "/Users/brunorodrigo/MinhaApi/obj/",
+        "projectPath": "D:\\Trabalho-csharp\\MinhaApi.csproj",
+        "packagesPath": "C:\\Users\\Vitor PC\\.nuget\\packages\\",
+        "outputPath": "D:\\Trabalho-csharp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/brunorodrigo/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Vitor PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -47,6 +47,20 @@
               "target": "Package",
               "version": "[8.0.8, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
@@ -71,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

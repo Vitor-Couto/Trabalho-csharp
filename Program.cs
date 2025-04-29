@@ -1,21 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using MinhaApi.Data;
 using MinhaApi.Models;
-using System.ComponentModel.DataAnnotations; // <--- Adicionado
+using System.ComponentModel.DataAnnotations; // Validações de dados
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura o banco de dados SQLite
+// Banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=banco.db"));
 
-// Configurações básicas
+// Serviços básicos
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configura Swagger para ambiente de desenvolvimento
+app.MapControllers();
+
+// Swagger apenas no desenvolvimento
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -24,16 +27,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Rotas para LIVROS
+// LIVROS
 
-// Buscar todos os livros
 app.MapGet("/livros", async (AppDbContext db) =>
     await db.Livros.Include(l => l.Categoria).ToListAsync());
 
-// Criar um novo livro
 app.MapPost("/livros", async (AppDbContext db, Livro livro) =>
 {
-    // Validação de DataAnnotations
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(livro);
 
@@ -43,11 +43,10 @@ app.MapPost("/livros", async (AppDbContext db, Livro livro) =>
         return Results.BadRequest(erros);
     }
 
-    // Validação da existência da Categoria
-    var categoriaExiste = await db.GetCategorias().AnyAsync(c => c.Id == livro.CategoriaId);
+    var categoriaExiste = await db.Categorias.AnyAsync(c => c.Id == livro.CategoriaId);
     if (!categoriaExiste)
     {
-        return Results.BadRequest($"Categoria com ID {livro.CategoriaId} não existe.");
+        return Results.BadRequest($"Categoria com ID {livro.CategoriaId} não encontrada.");
     }
 
     db.Livros.Add(livro);
@@ -55,13 +54,11 @@ app.MapPost("/livros", async (AppDbContext db, Livro livro) =>
     return Results.Created($"/livros/{livro.Id}", livro);
 });
 
-// Atualizar um livro existente
 app.MapPut("/livros/{id}", async (int id, Livro input, AppDbContext db) =>
 {
     var livro = await db.Livros.FindAsync(id);
     if (livro is null) return Results.NotFound();
 
-    // Atualizar dados
     livro.Titulo = input.Titulo;
     livro.Autor = input.Autor;
     livro.Disponivel = input.Disponivel;
@@ -71,7 +68,6 @@ app.MapPut("/livros/{id}", async (int id, Livro input, AppDbContext db) =>
     return Results.Ok(livro);
 });
 
-// Deletar um livro
 app.MapDelete("/livros/{id}", async (int id, AppDbContext db) =>
 {
     var livro = await db.Livros.FindAsync(id);
@@ -82,10 +78,9 @@ app.MapDelete("/livros/{id}", async (int id, AppDbContext db) =>
     return Results.NoContent();
 });
 
-// Buscar todos os livros de uma categoria específica
 app.MapGet("/categorias/{id}/livros", async (int id, AppDbContext db) =>
 {
-    var categoria = await db.GetCategorias()
+    var categoria = await db.Categorias
         .Include(c => c.Livros)
         .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -94,16 +89,13 @@ app.MapGet("/categorias/{id}/livros", async (int id, AppDbContext db) =>
         : Results.Ok(categoria.Livros);
 });
 
-// Rotas para CATEGORIAS
+// CATEGORIAS
 
-// Buscar todas as categorias
 app.MapGet("/categorias", async (AppDbContext db) =>
-    await db.GetCategorias().Include(c => c.Livros).ToListAsync());
+    await db.Categorias.Include(c => c.Livros).ToListAsync());
 
-// Criar uma nova categoria
 app.MapPost("/categorias", async (AppDbContext db, Categoria categoria) =>
 {
-    // Validação de DataAnnotations
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(categoria);
 
@@ -113,7 +105,7 @@ app.MapPost("/categorias", async (AppDbContext db, Categoria categoria) =>
         return Results.BadRequest(erros);
     }
 
-    db.GetCategorias().Add(categoria);
+    db.Categorias.Add(categoria);
     await db.SaveChangesAsync();
     return Results.Created($"/categorias/{categoria.Id}", categoria);
 });
